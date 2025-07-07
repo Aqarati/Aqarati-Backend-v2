@@ -19,7 +19,7 @@ public class UserApp  {
     @MongoId
     private String id;
     private String email;
-    private String uname;
+    private String username;
     @JsonIgnore
     private String password;
     private String firstName;
@@ -27,10 +27,15 @@ public class UserApp  {
     private String phoneNumber;
     private List<Long> favouriteProperty;
     private String imageUrl;
+    @Builder.Default
+    private boolean isEmailVerified=false;
+    @Builder.Default
+    private boolean isPhoneNumberVerified=false;
     @JsonIgnore
     private List<String> role;
     @JsonIgnore
     private Date createdDate;
+
 
     public UserApp() {
         this.createdDate = new Date();
