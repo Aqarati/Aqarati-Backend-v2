@@ -9,13 +9,15 @@
         <outputRelativeToContentRoot value="true" />
         <module name="propertyService" />
         <module name="imageService" />
-        <module name="documentService" />
         <module name="authService" />
         <module name="gateway" />
         <module name="ServiceDiscovery" />
         <module name="userService" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="documentService" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

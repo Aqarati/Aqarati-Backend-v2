@@ -19,10 +19,6 @@ public class PropertySearchController {
     private final PropertySearchService propertySearchService;
     private final PropertyImageRepository propertyImageRepository;
 
-//    @GetMapping("/")
-//    public List<ElasticProperty> searchPropertyByKeyword(@RequestParam String keyword){
-//        return propertySearchService.searchPropertyByKeyword(keyword);
-//    }
     @GetMapping("/")
     public List<Property> searchPropertyByKeyword(@RequestParam String keyword){
         return propertySearchService.searchPropertyByKeyword(keyword);

@@ -43,6 +43,7 @@ public class PropertyController {
     public Property getPropertyById(@PathVariable("id") Long id) throws NotFoundException {
         return propertyService.getPropertyById(id);
     }
+
     @GetMapping("/properties")
     public List<Property> getPropertiesById(@RequestParam List<Long>  PropertiesIDs) throws NotFoundException {
         return propertyService.getPropertiesById(PropertiesIDs);
@@ -77,10 +78,12 @@ public class PropertyController {
     public PropertyImage activatePropertyImageVr(@PathVariable("id")Long imageId) throws NotFoundException {
         return propertyService.activatePropertyImageVr(imageId);
     }
+
     @PutMapping("/image/deactive/{id}")
     public PropertyImage deactivatePropertyImageVr(@PathVariable("id")Long imageId) throws NotFoundException {
         return propertyService.deactivatePropertyImageVr(imageId);
     }
+
     @DeleteMapping("/image/{id}")
     public PropertyImage deletePropertyImage(HttpServletRequest request,@PathVariable Long id) throws NotFoundException, InvalidJwtAuthenticationException {
         return propertyService.deletePropertyImage(request,id);

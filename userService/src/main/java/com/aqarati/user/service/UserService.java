@@ -26,7 +26,6 @@ public class UserService {
     private final Publisher publisher;
     private final List<String> ALLOWED_IMAGE_TYPES = Arrays.asList("image/jpeg", "image/png");
 
-
     public UserApp getInformation(HttpServletRequest request) throws InvalidJwtAuthenticationException {
         var token = jwtTokenUtil.resolveToken(request);
         var userEmail = jwtTokenUtil.getEmail(token);
