@@ -1,6 +1,7 @@
 package com.aqarati.property.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +27,10 @@ public class Property implements Serializable {
     private Double price;
 
     @Builder.Default
+    @Column(name = "currency_code", nullable = false)
+    private String currencyCode="SYP";
+
+    @Builder.Default
     @Column(name = "verified", nullable = false)
     private boolean verified = false;
 
@@ -43,34 +48,21 @@ public class Property implements Serializable {
 
     @Column(name = "property_status")
     @Builder.Default
+    @Enumerated(EnumType.STRING)
     private PropertyStatus propertyStatus = PropertyStatus.AVAILABLE;
 
+    @Column(name = "property_category")
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private PropertyCategory propertyCategory = PropertyCategory.UNDEFINED;
+
     @ElementCollection(fetch = FetchType.EAGER)
-    @Column(name = "selected_features")
+    @Column(name = "features")
     private List<String> features = new ArrayList<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(name = "selected_nearby_locations")
-    private List<String> nearbyLocations = new ArrayList<>();
+    @OneToOne(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonManagedReference
+    private PropertyLocation propertyLocation;
 
-    @Column(name = "province")
-    private String province;
 
-    @Column(name = "region")
-    private String region;
-
-    @Column(name = "number_of_rooms")
-    private Integer numberOfRooms;
-
-    @Column(name = "number_of_bathrooms")
-    private Integer numberOfBathrooms;
-
-    @Column(name = "building_age")
-    private Integer buildingAge;
-
-    @Column(name = "floor")
-    private String floor;
-
-    @Column(name = "property_area")
-    private String propertyArea;
 }

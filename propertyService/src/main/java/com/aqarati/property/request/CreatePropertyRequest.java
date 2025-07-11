@@ -1,26 +1,39 @@
 package com.aqarati.property.request;
 
+import com.aqarati.property.model.PropertyCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Builder@Data
-@AllArgsConstructor@NoArgsConstructor
+import com.aqarati.property.model.PropertyStatus;
+import lombok.*;
+
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class CreatePropertyRequest {
+
     private String name;
     private String description;
-    private double price;
-    private List<String> features = new ArrayList<>();
-    private List<String> nearbyLocations = new ArrayList<>();
-    private String province;
-    private String region;
-    private Integer numberOfRooms;
-    private Integer numberOfBathrooms;
-    private Integer buildingAge;
-    private String floor;
-    private String propertyArea;
+    private Double price;
+    private List<String> features;
+    private PropertyCategory propertyCategory;
+    private LocationRequest location;
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class LocationRequest {
+        private Double latitude;
+        private Double longitude;
+        private String city;
+        private String district;
+    }
 }

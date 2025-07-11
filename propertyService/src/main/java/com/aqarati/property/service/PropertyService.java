@@ -3,6 +3,7 @@ package com.aqarati.property.service;
 import com.aqarati.property.client.ImageServiceClient;
 import com.aqarati.property.exception.NotFoundException;
 import com.aqarati.property.model.PropertyImage;
+import com.aqarati.property.model.PropertyLocation;
 import com.aqarati.property.repository.PropertyImageRepository;
 import com.aqarati.property.repository.PropertyRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +29,6 @@ import java.util.List;
 public class PropertyService {
 
     private final PropertyRepository propertyRepository;
-//    private final ElasticPropertyRepository elasticPropertyRepository;
     private final PropertyImageRepository propertyImageRepository;
     private final ImageServiceClient imageServiceClient;
     private final JwtTokenUtil jwtTokenUtil;
@@ -37,8 +37,6 @@ public class PropertyService {
     @Cacheable(value = "Properties")
     public List<Property> getAll(){
       var x= propertyRepository.findAll();
-        System.out.println("\n \n ");
-        System.out.println(x.toString());
         return x;
     }
     @Cacheable(value = "Properties")
@@ -61,21 +59,25 @@ public class PropertyService {
     public Property createProperty(HttpServletRequest request, CreatePropertyRequest propertyRequest) throws InvalidJwtAuthenticationException {
         var token = jwtTokenUtil.resolveToken(request);
         if (jwtTokenUtil.validateToken(token)) {
+
             var property = Property.builder()
                     .name(propertyRequest.getName())
                     .description(propertyRequest.getDescription())
                     .price(propertyRequest.getPrice())
                     .features(propertyRequest.getFeatures())
-                    .nearbyLocations(propertyRequest.getNearbyLocations())
-                    .province(propertyRequest.getProvince())
-                    .region(propertyRequest.getRegion())
-                    .numberOfRooms(propertyRequest.getNumberOfRooms())
-                    .numberOfBathrooms(propertyRequest.getNumberOfBathrooms())
-                    .buildingAge(propertyRequest.getBuildingAge())
-                    .floor(propertyRequest.getFloor())
-                    .propertyArea(propertyRequest.getPropertyArea())
                     .userId(jwtTokenUtil.getUserId(token))
+                    .propertyCategory(propertyRequest.getPropertyCategory())
                     .build();
+
+            var location = PropertyLocation.builder()
+                    .longitude(propertyRequest.getLocation().getLongitude())
+                    .latitude(propertyRequest.getLocation().getLatitude())
+                    .city(propertyRequest.getLocation().getCity())
+                    .district(propertyRequest.getLocation().getDistrict())
+                    .property(property) // 🔥 Set owning side of the relationship
+                    .build();
+            property.setPropertyLocation(location); // optional, but good for bidirectional sync
+
             return propertyRepository.save(property);
             }
         throw new InvalidJwtAuthenticationException("invalid jwt");
@@ -99,15 +101,8 @@ public class PropertyService {
         existingProperty.setPrice(property.getPrice() != null ? property.getPrice() : existingProperty.getPrice());
         existingProperty.setDescription(property.getDescription() != null ? property.getDescription() : existingProperty.getDescription());
         existingProperty.setPropertyStatus(property.getPropertyStatus() != null ? property.getPropertyStatus() : existingProperty.getPropertyStatus());
+        existingProperty.setPropertyCategory(property.getPropertyCategory() != null ? property.getPropertyCategory() : existingProperty.getPropertyCategory());
         existingProperty.setFeatures(property.getFeatures() != null ? property.getFeatures() : existingProperty.getFeatures());
-        existingProperty.setNearbyLocations(property.getNearbyLocations() != null ? property.getNearbyLocations() : existingProperty.getNearbyLocations());
-        existingProperty.setProvince(property.getProvince() != null ? property.getProvince() : existingProperty.getProvince());
-        existingProperty.setRegion(property.getRegion() != null ? property.getRegion() : existingProperty.getRegion());
-        existingProperty.setNumberOfRooms(property.getNumberOfRooms() != null ? property.getNumberOfRooms() : existingProperty.getNumberOfRooms());
-        existingProperty.setNumberOfBathrooms(property.getNumberOfBathrooms() != null ? property.getNumberOfBathrooms() : existingProperty.getNumberOfBathrooms());
-        existingProperty.setBuildingAge(property.getBuildingAge() != null ? property.getBuildingAge() : existingProperty.getBuildingAge());
-        existingProperty.setFloor(property.getFloor() != null ? property.getFloor() : existingProperty.getFloor());
-        existingProperty.setPropertyArea(property.getPropertyArea() != null ? property.getPropertyArea() : existingProperty.getPropertyArea());
 
         return propertyRepository.save(existingProperty);
     }
